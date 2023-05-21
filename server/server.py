@@ -6,9 +6,11 @@ from pathlib import Path
 
 import json
 
+from processor import process_video
+
 app = Flask(__name__)
 
-CORS(app, origins=["http://localhost:3000/"])
+CORS(app, origins=["http://localhost:3000"])
 
 app.config["UPLOAD_EXTENSIONS"] = [".mp4", ".jpg", ".png", "webm"]
 
@@ -23,9 +25,11 @@ def fail_with(msg):
 
 @app.route("/process_youtube_link", methods=["POST"])
 def process_youtube_link():
-    if 'video_link' not in request.form:
-        return json.dumps(fail_with("No Video Link"))
-    video_link = request.form["video_link"]
+    decoded = request.data.decode('utf-8')
+    request_json = json.loads(decoded)
+    video_link = request_json["videoLink"]
+    
+    print(request_json)
 
     # Extract transcript
     # Extract OCR results per frame
@@ -34,8 +38,8 @@ def process_youtube_link():
     # moment: {
     #   "start": 0,
     #   "finish": 0,
-    #   "transcript_start": 0,
-    #   "transcript_finish": 0,
+    #   "transcriptStart": 0,
+    #   "transcriptFinish": 0,
     #   "title": "text caption",
     # }
 
@@ -44,18 +48,30 @@ def process_youtube_link():
     #   "transcript": list[transcript]
     # }
 
+    video_path = download_youtube_video(video_link)
+    transcript, moments = process_video(video_path)
 
     responseJSON = {
         "request": {
-            "video_link": video_link,
+            "videoLink": video_link,
         },
-        "result": None,
+        "moments": moments,
+        "transcript": transcript,
         "status": "success"
     }
     return json.dumps(responseJSON)
+
+def test_video(video_link):
+    transcript, moments, metadata = process_video(video_link)
+    #print(transcript)
+    #print(moments)
+
 
 def launch_server():
     app.run(host="0.0.0.0", port=7777)
 
 if __name__ == "__main__":
-    launch_server()
+    #test_video("https://www.ssyoutube.com/watch?v=XqdDMNExvA0")
+    #test_video("https://youtu.be/XqdDMNExvA0")
+    test_video("https://youtu.be/pZ3HQaGs3uc")
+    #launch_server()

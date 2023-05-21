@@ -32,20 +32,24 @@ const VideoPlayer = observer(function VideoPlayer() {
 
     const updateVideoMetadata = action((event) => {
         console.log(event);
-        uiStore.updateVideoMetadata({
-            duration: event.getDuration(),
-            moments: [{
-                time: 5,
-                title: "text caption"
-            }],
-        }, event.getCurrentTime());
+        uiStore.updateVideoMetadata(event.getDuration(), event.getCurrentTime());
     });
 
     const updateCurrentTimeVideo = action((event) => {
         uiStore.videoCurrentTime = event.playedSeconds; 
     });
 
+    const onPlay = action((event) => {
+        uiStore.videoMetadata.playing = true;
+    });
+    const onPause = action((event) => {
+        uiStore.videoMetadata.playing = false;
+    });
+
     return <div style={{
+        display: "flex",
+        flexDirection: "column",
+        margin: 10
     }}>
         <div>
             <label htmlFor={"video_player"} > Youtube Video Link </label>
@@ -77,6 +81,8 @@ const VideoPlayer = observer(function VideoPlayer() {
             }}
             onReady={updateVideoMetadata}
             onProgress={updateCurrentTimeVideo}
+            onPlay={onPlay}
+            onPause={onPause}
         />
         <Timeline 
             videoPlayerRef={videoPlayerRef}

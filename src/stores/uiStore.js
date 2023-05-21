@@ -1,5 +1,16 @@
 import { makeAutoObservable } from "mobx";
 
+import axios from 'axios'
+
+const ADDR = "http://localhost:7777/"
+
+const REQUEST_TYPES = {
+    youtubeLink: {
+        serverAddr: ADDR,
+        route: "process_youtube_link"
+    }
+};
+
 class UIStore {
     // Session Info
     accountId = "test";
@@ -26,17 +37,42 @@ class UIStore {
     constructor(rootStore) {
         makeAutoObservable(this, {}, { autoBind: true });
         this.rootStore = rootStore;
+        this.processYoutubeLink();
     }
 
     updateVideoLink(videoLink) {
         this.videoLink = videoLink;
         this.showPlayer = true;
+        this.processYoutubeLink();
     }
 
-    updateVideoMetadata(videoMetadata, videoCurrentTime) {
-        this.videoMetadata = videoMetadata;
+    updateVideoMetadata(duration, videoCurrentTime) {
+        this.videoMetadata = {
+            ...this.videoMetadata,
+            duration: duration,
+        };
         this.videoPlaying = false;
         this.videoCurrentTime = videoCurrentTime;
+    }
+
+    processYoutubeLink() {
+        const requestCfg = REQUEST_TYPES.youtubeLink;
+        axios.post(requestCfg.serverAddr + requestCfg.route, {
+            videoLink: this.videoLink,
+        }).then( (response) => {
+            console.log(response);
+            if (response.data.status === "error") {
+                alert("Could not process the youtube link")
+                return;
+            }
+            const moments = response.data.moments;
+            const transcript = response.data.transcript;
+            this.videoMetadata = {
+                ...this.videoMetadata,
+                moments,
+                transcript
+            };
+        });
     }
 }
 

@@ -52,7 +52,7 @@ const Timeline = observer(function Timeline( {videoPlayerRef} ) {
             {uiStore.videoMetadata.moments.map((moment, idx) => {
                 const curId = "moment" + idx;
                 const curLeft = (uiStore.videoMetadata.duration ? 
-                    (moment.time / uiStore.videoMetadata.duration) * uiStore.videoSize.width
+                    (moment.start / uiStore.videoMetadata.duration) * uiStore.videoSize.width
                     : 0
                 );
                 return (
@@ -63,8 +63,8 @@ const Timeline = observer(function Timeline( {videoPlayerRef} ) {
                         backgroundColor: "red",
                         left: curLeft,
                     }}> 
-                        <span style={ { fontSize: 15, color: "red"} }> {moment.title} </span>
-                        <span style={ { fontSize: 15} }> {moment.time} </span>
+                        <span style={ { fontSize: 15, color: "red"} }> {moment.type} </span>
+                        <span style={ { fontSize: 15} }> {moment.start} </span>
                     </div>                    
                 );
             })}
