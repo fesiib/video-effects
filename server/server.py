@@ -48,14 +48,14 @@ def process_youtube_link():
     #   "transcript": list[transcript]
     # }
 
-    video_path = download_youtube_video(video_link)
-    transcript, moments = process_video(video_path)
+    transcript, moments, metadata = process_video(video_link)
 
     responseJSON = {
         "request": {
             "videoLink": video_link,
         },
         "moments": moments,
+        "metadata": metadata,
         "transcript": transcript,
         "status": "success"
     }
@@ -73,5 +73,5 @@ def launch_server():
 if __name__ == "__main__":
     #test_video("https://www.ssyoutube.com/watch?v=XqdDMNExvA0")
     #test_video("https://youtu.be/XqdDMNExvA0")
-    test_video("https://youtu.be/pZ3HQaGs3uc")
-    #launch_server()
+    #test_video("https://youtu.be/pZ3HQaGs3uc")
+    launch_server()

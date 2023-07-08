@@ -76,7 +76,7 @@ const VideoPlayer = observer(function VideoPlayer() {
             height={uiStore.videoSize.height}
             config={{
                 youtube: {
-                    playerVars: {controls: 0}
+                    playerVars: {controls: 1}
                 }
             }}
             onReady={updateVideoMetadata}
@@ -84,9 +84,9 @@ const VideoPlayer = observer(function VideoPlayer() {
             onPlay={onPlay}
             onPause={onPause}
         />
-        <Timeline 
+        {/* <Timeline 
             videoPlayerRef={videoPlayerRef}
-        />
+        /> */}
     </div>
 });
 

@@ -65,6 +65,11 @@ def get_transcript(subtitles):
     return transcript
 
 def get_moments(stream):
+    while (True):
+        res, frame = stream.read()
+        if (res == False):
+            break
+    
     return [{
         "start": 1,
         "finish": 5,
