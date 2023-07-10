@@ -84,9 +84,9 @@ const VideoPlayer = observer(function VideoPlayer() {
             onPlay={onPlay}
             onPause={onPause}
         />
-        {/* <Timeline 
+        <Timeline 
             videoPlayerRef={videoPlayerRef}
-        /> */}
+        />
     </div>
 });
 
